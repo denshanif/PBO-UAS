@@ -1,5 +1,6 @@
 #include <iostream>
 #include <conio.h>
+#include <vector>
 
 using namespace std;
 
@@ -15,8 +16,55 @@ class Tampilan {
   public:
     void awal();
     void tipePengguna();
+    void loginStaff(); 
     void welcome();
     void menuStaff();
+};
+
+class pengguna{
+  private:
+    string user;
+    string pass;
+  public:
+    pengguna(){
+      this->user = " ";
+      this->pass = " ";
+    }
+    pengguna(string user, string pass){
+      this->user = user;
+      this->pass = pass;
+    }
+    string getuser(){
+      return user;
+    }
+    string getpass(){
+      return pass;
+    }
+};
+
+class penggunabaru : public pengguna{
+  private:
+    vector<pengguna> staff;
+  public:
+    penggunabaru(){
+      this->staff.push_back(pengguna("admin","admin"));
+    }
+    bool cek(string user, string pass){
+      for(int i=0; i<staff.size();i++){
+        if(staff[i].getuser() == user && staff[i].getpass() == pass){
+          return true;
+        }
+      }
+      return false;
+    }
+    pengguna getuser(string user, string pass){
+      for(int i=0; i<staff.size();i++){
+        if(staff[i].getuser() == user && staff[i].getpass() == pass){
+          return staff[i];  
+        }
+      }
+      return pengguna();
+    }
 };
 
 class Menu {
@@ -298,6 +346,31 @@ void Tampilan::tipePengguna()
   cout << "2. Exit \n";
 }
 
+void Tampilan::loginStaff()
+{
+  string id;
+  string pass;
+  bool masuk=false;
+  while (!masuk)
+  {
+    cout<<"=================MASUK STAFF==============\n\n";//ID : admin, Password : admin
+    cout<<"Masukkan ID : ";
+    cin>>id;
+    cout<<"Masukkan Password : ";
+    cin>>pass;
+    penggunabaru y;
+    masuk = y.cek(id,pass);
+    if(!masuk)
+    {
+      cout<<"Anda Salah Input ID/Password!\n";
+    }
+    else
+    {
+      id = y.cek(id,pass);
+    }
+  }
+}
+
 void Tampilan::welcome()
 {
   char pilihan;
@@ -308,6 +381,7 @@ void Tampilan::welcome()
   switch (pilihan)
   {
   case '1':
+    loginStaff();
     menuStaff();
     break;
   case '2':
@@ -330,5 +404,5 @@ int main() {
   t.awal();
   t.welcome();
   getch();
-  return 0;
+  return 0;  
 }
